@@ -5,6 +5,7 @@ import Button from "../components/Common/Button";
 import InputWithLabel from "../components/Common/InputWithLabel";
 import { getSession } from "next-auth/react";
 import GoogleSigninButton from "../components/Common/GoogleSigninButton";
+import GitHubSigninButton from "../components/Common/GitHubSigninButton";
 
 import { useFormik } from "formik";
 import login_validation from "../lib/formikValidation/login_validation";
@@ -54,7 +55,7 @@ const login = () => {
         <title>Login your account</title>
       </Head>
 
-      <section className="bg-gray-50 py-12 dark:bg-gray-900">
+      <section className="h-full py-12 bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
           <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             <span className="mr-2">Login to</span>
@@ -64,13 +65,13 @@ const login = () => {
               alt="logo"
             />
             <span className="text-primary-700">SR</span>
-            <span className="text-red-400 font-bold">BD</span>
+            <span className="font-bold text-red-400">BD</span>
             <span className="text-primary-700">TOPUP</span>
           </div>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               {error && (
-                <p className="text-red-500 flex items-center gap-x-2">
+                <p className="flex items-center text-red-500 gap-x-2">
                   <FontAwesomeIcon icon={faExclamationCircle} />
                   <span>{error}</span>
                 </p>
@@ -115,6 +116,7 @@ const login = () => {
               </form>
 
               <GoogleSigninButton />
+              <GitHubSigninButton />
 
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 <span className="mr-1"> Don't have an account?</span>

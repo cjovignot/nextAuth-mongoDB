@@ -71,7 +71,7 @@ const signup = () => {
         <title>Register new account</title>
       </Head>
 
-      <section className="bg-gray-50 dark:bg-gray-900">
+      <section className="h-full bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -79,7 +79,7 @@ const signup = () => {
                 Create and account
               </h1>
               {error && (
-                <p className="text-red-500 flex items-center gap-x-2">
+                <p className="flex items-center text-red-500 gap-x-2">
                   <FontAwesomeIcon icon={faExclamationCircle} />
                   <span>{error}</span>
                 </p>

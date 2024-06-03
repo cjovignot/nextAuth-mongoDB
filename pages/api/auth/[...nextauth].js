@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDatabase from "../../../lib/connectDatabase";
 import User from "../../../model/User";
@@ -13,14 +14,16 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
 
       async profile(profile) {
-        connectDatabase();
+        await connectDatabase();
 
         const email = profile.email;
-        const name = profile.name;
+        const name = profile.name || profile.given_name; // Ensure name is provided
         const image = profile.picture;
 
         const exist_user = await User.findOne({ email });
-        if (!exist_user) User.create({ email, name, balance: 0, image });
+        if (!exist_user) {
+          await User.create({ email, name, balance: 0, image });
+        }
 
         return {
           id: profile.sub,
@@ -31,13 +34,39 @@ export default NextAuth({
       },
     }),
 
-    // With CustomCredentials
+    // GitHub Provider
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+
+      async profile(profile) {
+        await connectDatabase();
+
+        const email = profile.email;
+        const name = profile.name || profile.login; // Ensure name is provided
+        const image = profile.avatar_url;
+
+        const exist_user = await User.findOne({ email });
+        if (!exist_user) {
+          await User.create({ email, name, balance: 0, image });
+        }
+
+        return {
+          id: profile.id,
+          name,
+          email,
+          image,
+        };
+      },
+    }),
+
+    // With Custom Credentials
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials, req) {
         await connectDatabase();
 
-        // check user existance
+        // check user existence
         const user = await User.findOne({ email: credentials?.email });
         if (!user) throw Error("Email or Password doesn't match!");
 
@@ -55,5 +84,19 @@ export default NextAuth({
     }),
   ],
 
-  secret: "NE6qyym4mH0hNJP7nAq+kNS6OGo0RUfXPkCWyYl46cA=",
+  secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+    async session({ session, token }) {
+      // Add custom properties to session object
+      session.user.id = token.id;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+  },
 });

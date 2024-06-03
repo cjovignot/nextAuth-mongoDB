@@ -33,9 +33,9 @@ export default function App({ Component, pageProps }) {
   return (
     <SessionProvider session={pageProps?.session}>
       <ContextProvider>
-        <Header />
-        <Component {...pageProps} />;
-        <Footer />
+        {/* <Header /> */}
+        <Component {...pageProps} />
+        {/* <Footer /> */}
         <ToastContainer />
       </ContextProvider>
     </SessionProvider>
